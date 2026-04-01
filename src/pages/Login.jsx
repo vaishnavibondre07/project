@@ -9,10 +9,9 @@ export const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const user = users.find((u) => u.email === email && u.password === password);
+    const user = JSON.parse(localStorage.getItem("users")) || [];
+    
     if (user) {
-      localStorage.setItem("currentUser", JSON.stringify(user));
       alert("Login successful!");
       navigate("/cart");
     } else {
