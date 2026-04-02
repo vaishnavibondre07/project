@@ -8,37 +8,37 @@ export const Signup = () => {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Simple validation
+    
     if (username.length < 4) {
-      alert("Username must be at least 4 letters");
+      setError("Username must be at least 4 letters");
       return;
     }
 
     if (!email.includes("@")) {
-      alert("Enter a valid email");
+      setError("Enter a valid email");
       return;
     }
 
     if (phone.length !== 10 || isNaN(phone)) {
-      alert("Phone must be 10 digits");
+      setError("Phone must be 10 digits");
       return;
     }
 
     if (password.length < 8) {
-      alert("Password must be at least 8 characters");
+      setError("Password must be at least 8 characters");
       return;
     }
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match");
+      setError("Passwords do not match");
       return;
     }
 
-    // Save the single user in localStorage (overwrite previous)
     const user = { 
                    username, 
                    email, 
@@ -46,7 +46,8 @@ export const Signup = () => {
                    password,
                 };
 
-    alert("Signup successful!");
+    localStorage.setItem("user", JSON.stringify(user));  
+
     navigate("/cart");
   };
 
@@ -66,6 +67,7 @@ export const Signup = () => {
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            required
             className="w-full border p-2 rounded"
           />
         </div>
@@ -76,6 +78,7 @@ export const Signup = () => {
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
             className="w-full border p-2 rounded"
           />
         </div>
@@ -86,6 +89,7 @@ export const Signup = () => {
             type="text"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
+            required
             className="w-full border p-2 rounded"
           />
         </div>
@@ -96,6 +100,7 @@ export const Signup = () => {
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
             className="w-full border p-2 rounded"
           />
         </div>
@@ -106,9 +111,12 @@ export const Signup = () => {
             type="password"
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            required
             className="w-full border p-2 rounded"
           />
         </div>
+
+        {error && <p className="text-red-500 text-center">{error}</p>}
 
         <button
           type="submit"
@@ -121,7 +129,7 @@ export const Signup = () => {
           Already have an account?{" "}
           <span
             className="text-purple-700 cursor-pointer underline"
-            onClick={() => navigate("/cart")}
+            onClick={() => navigate("/")}
           >
             Login
           </span>
