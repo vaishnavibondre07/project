@@ -4,11 +4,11 @@ const ProtectedRoute = ({ children }) => {
   const isLoggedIn = localStorage.getItem("isLoggedIn") === "true";
 
   if (!isLoggedIn) {
-    alert("Please login first!"); // triggers only once
-    return <Navigate to="/login" />; // immediately redirect
+    alert("Please login first!"); 
+    return <Navigate to="/login" />; 
   }
 
-  return children; // render page if logged in
+  return children; 
 };
 
 export default ProtectedRoute;

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 
@@ -13,12 +13,10 @@ const Navbar = () => {
 
   const handleAuthClick = () => {
     if (isLoggedIn) {
-      // Logout
       localStorage.setItem("isLoggedIn", "false");
-      setIsLoggedIn(false); // update state so UI changes
-      // navigate("/login"); // redirect to login page
+      setIsLoggedIn(false); 
+      // navigate("/login"); 
     } else {
-      // Go to login page
       navigate("/login");
     }
   };

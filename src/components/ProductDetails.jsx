@@ -70,7 +70,7 @@ const ProductDetails = () => {
             <p><strong>Shipping:</strong> {data?.shippingInformation}</p>
           </div>
 
-          {/* Add / Remove Button */}
+          
           <div className="flex gap-4 mt-4">
             {inCart ? (
               <button
@@ -98,7 +98,7 @@ const ProductDetails = () => {
 
       <div className="mt-12">
         <h2 className="text-2xl font-semibold mb-6">Customer Reviews</h2>
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-3 gap-6">
           {data?.reviews?.map((item, idx) => (
             <div key={idx} className="bg-white p-5 rounded-xl shadow hover:shadow-md transition">
               <p className="text-yellow-500 font-medium">⭐ {item.rating}</p>

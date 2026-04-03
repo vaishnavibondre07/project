@@ -20,7 +20,7 @@ const handleSubmit = (e) => {
   if (user.email === email && user.password === password) {
     localStorage.setItem("isLoggedIn", "true");
     alert("Login successful!");
-    navigate("/"); // redirect
+    navigate("/"); 
   } else {
     alert("Invalid credentials!");
   }

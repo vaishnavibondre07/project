@@ -1,14 +1,6 @@
-import { useNavigate } from "react-router-dom";
-
 const Profile = () => {
-  const navigate = useNavigate();
 
   const user = JSON.parse(localStorage.getItem("user"));
-
-  // const handleLogout = () => {
-  //   localStorage.setItem("isLoggedIn", "false");
-  //   navigate("/");
-  // };
 
   // If no user logged in
   if (!user) {
@@ -27,7 +19,6 @@ const Profile = () => {
           Profile
         </h2>
 
-        {/* User Info */}
         <div className="space-y-3 text-gray-700">
           <p><strong>Username:</strong> {user.username}</p>
           <p><strong>Email:</strong> {user.email}</p>
@@ -35,13 +26,6 @@ const Profile = () => {
           {/* <p><strong>Password:</strong> {user.password}</p> */}
         </div>
 
-        {/* Logout Button */}
-        {/* <button
-          onClick={handleLogout}
-          className="w-full mt-6 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition"
-        >
-          Logout
-        </button> */}
       </div>
     </div>
   );

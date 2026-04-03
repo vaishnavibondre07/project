@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
@@ -13,7 +13,6 @@ const Signup = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    
     if (username.length < 4) {
       setError("Username must be at least 4 letters");
       return;
@@ -24,10 +23,10 @@ const Signup = () => {
       return;
     }
 
-    if (phone.length !== 10 || isNaN(phone)) {
-      setError("Phone must be 10 digits");
-      return;
-    }
+    if (!/^[7-9][0-9]{9}$/.test(phone)) {
+        setError("Phone must be 10 digits and start with 7, 8, or 9");
+        return;
+      }
 
     if (password.length < 8) {
       setError("Password must be at least 8 characters");
@@ -43,8 +42,7 @@ const Signup = () => {
                    username, 
                    email, 
                    phone, 
-                   password,
-                   isLoggedIn: false
+                   password
                 };
     
 
@@ -89,7 +87,7 @@ const Signup = () => {
         <div className="mb-4">
           <label>Phone</label>
           <input
-            type="text"
+            type="phone"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
             required

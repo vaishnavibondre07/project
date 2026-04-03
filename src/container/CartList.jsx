@@ -31,7 +31,8 @@ const CartList = () => {
         Total: ₹ {formattedTotal}
       </h2>
 
-      <button onClick={() => navigate('/checkout')}>
+      <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105 active:scale-95"
+          onClick={() => navigate('/checkout')}>
         Proceed to Checkout
       </button>
     </div>

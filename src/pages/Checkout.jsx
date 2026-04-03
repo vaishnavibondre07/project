@@ -4,6 +4,8 @@ import { useState, useMemo } from "react";
 export const Checkout = () => {
   const { cartItems, cartTotalPrice, clearCart } = useCart();
 
+  const [error, setError] = useState('')
+
   const [form, setForm] = useState({
     name: "",
     address: "",
@@ -27,6 +29,22 @@ export const Checkout = () => {
       return;
     }
 
+    if (name.length < 4 ){
+      setError('Enter valid name');
+      return;
+    }
+
+    if (pincode.length !== 6 || isNaN(pincode)) {
+      setError("Pincode must be 6 digits");
+      return;
+    }
+
+     if (!/^[7-9][0-9]{9}$/.test(phone)) {
+        setError("Phone must be 10 digits and start with 7, 8, or 9");
+        return;
+      }
+
+
     if (cartItems.length === 0) {
       alert("Cart is empty");
       return;
@@ -36,15 +54,17 @@ export const Checkout = () => {
     console.log("Order Details:", { form, cartItems, cartTotalPrice });
 
     setForm({ name: "", address: "", city: "", pincode: "", phone: "" });
+
+    setError("");
+    
     clearCart();
   };
 
   return (
     <div className="min-h-screen bg-gray-50 p-6 flex justify-center">
-      {/* Container - 80% width */}
+      
       <div className="w-full max-w-[80%] flex flex-col lg:flex-row gap-10">
         
-        {/* LEFT - FORM */}
         <div className="flex-1 bg-white p-8 rounded-2xl shadow-lg border border-gray-200">
           <h1 className="text-3xl font-bold mb-6 text-gray-800">Checkout</h1>
           <h2 className="text-2xl font-semibold mb-4 text-gray-700">Shipping Details</h2>
@@ -58,9 +78,14 @@ export const Checkout = () => {
                 placeholder={`Enter ${field}`}
                 value={form[field]}
                 onChange={handleChange}
+
                 className="border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition shadow-sm w-full max-w-md"
               />
             ))}
+          </div>
+
+          <div>
+            {error && (<p className="text-red-500 text-center">{error}</p>)}
           </div>
 
           <button
@@ -76,7 +101,7 @@ export const Checkout = () => {
           </button>
         </div>
 
-        {/* RIGHT - ORDER SUMMARY */}
+        
         <div className="w-full lg:w-1/3 bg-white p-6 rounded-2xl shadow-lg border border-gray-200 lg:sticky lg:top-24">
           <h2 className="text-2xl font-semibold mb-5 text-gray-700">Order Summary</h2>
 
