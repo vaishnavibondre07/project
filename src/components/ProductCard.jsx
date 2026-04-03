@@ -1,7 +1,7 @@
 import { useCart } from "../context/CartContext";
 import React from "react";
 
-export const ProductCard = React.memo(({ productData, onClick, }) => {
+const ProductCard = React.memo(({ productData, onClick, }) => {
   const { addToCart, isCart } = useCart(); 
 
   const inCart = isCart(productData.id);
@@ -40,6 +40,8 @@ export const ProductCard = React.memo(({ productData, onClick, }) => {
     </li>
   );
 });
+
+export default ProductCard;
 
 
 

@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { useCart } from "../context/CartContext";
 
-export const ProductDetails = () => {
+const ProductDetails = () => {
   const { addToCart, deleteFromCart, isCart} = useCart();
   const { id } = useParams();
   const { data, isLoading, error } = useGetDetailsQuery(id);
@@ -112,7 +112,7 @@ export const ProductDetails = () => {
   );
 };
 
-
+export default ProductDetails;
 
 
 

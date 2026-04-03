@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const Signup = () => {
+const Signup = () => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -44,11 +44,14 @@ export const Signup = () => {
                    email, 
                    phone, 
                    password,
+                   isLoggedIn: false
                 };
+    
+
 
     localStorage.setItem("user", JSON.stringify(user));  
 
-    navigate("/cart");
+    navigate("/login");
   };
 
   return (
@@ -129,7 +132,7 @@ export const Signup = () => {
           Already have an account?{" "}
           <span
             className="text-purple-700 cursor-pointer underline"
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/login")}
           >
             Login
           </span>
@@ -138,3 +141,5 @@ export const Signup = () => {
     </div>
   );
 };
+
+export default Signup;

@@ -1,10 +1,10 @@
 import { useState, useMemo } from "react";
-import { ProductCard } from "../components/ProductCard";
+import ProductCard  from "../components/ProductCard";
 import { useGetProductsQuery } from "../api/productApi";
 import { useNavigate } from "react-router-dom";
 
 
-export const ProductListContainer = () => {
+const ProductListContainer = () => {
   const navigate = useNavigate();
   const { data, error, isLoading } = useGetProductsQuery();
 
@@ -102,6 +102,8 @@ export const ProductListContainer = () => {
   );
 };
 
+export default ProductListContainer;
+
 
 // import { ProductCard } from "../components/ProductCard";
 // import { useGetProductsQuery } from "../api/productApi";
@@ -132,4 +134,3 @@ export const ProductListContainer = () => {
 //     </div>
 //   );
 // };
-

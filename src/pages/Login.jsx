@@ -1,31 +1,30 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-export const Login = () => {
+const Login = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+ const user = JSON.parse(localStorage.getItem("user"));
 
-    const users = JSON.parse(localStorage.getItem("users")) || [];
+const handleSubmit = (e) => {
+  e.preventDefault();
 
-    const foundUser = users.find(
-      (u) =>
-        u.email === email &&
-        u.password === password.trim()
-    );
+  if (!user) {
+    alert("No user found. Please signup first!");
+    return;
+  }
 
-    if (foundUser) {
-      alert("Login successful!");
-      navigate("/cart");
-    } else {
-      setError("Invalid email or password");
-    }
-  }; // ✅ CLOSED properly
-
+  if (user.email === email && user.password === password) {
+    localStorage.setItem("isLoggedIn", "true");
+    alert("Login successful!");
+    navigate("/"); // redirect
+  } else {
+    alert("Invalid credentials!");
+  }
+};
   return (
     <div className="min-h-screen flex items-center justify-center">
       <form
@@ -80,3 +79,5 @@ export const Login = () => {
     </div>
   );
 };
+
+export default Login;

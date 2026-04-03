@@ -1,13 +1,14 @@
 import { useNavigate } from "react-router-dom";
 
-export const Profile = () => {
+const Profile = () => {
   const navigate = useNavigate();
 
   const user = JSON.parse(localStorage.getItem("user"));
 
-  const handleLogout = () => {
-    navigate("/");
-  };
+  // const handleLogout = () => {
+  //   localStorage.setItem("isLoggedIn", "false");
+  //   navigate("/");
+  // };
 
   // If no user logged in
   if (!user) {
@@ -35,13 +36,15 @@ export const Profile = () => {
         </div>
 
         {/* Logout Button */}
-        <button
+        {/* <button
           onClick={handleLogout}
           className="w-full mt-6 bg-red-600 text-white py-2 rounded-lg hover:bg-red-700 transition"
         >
           Logout
-        </button>
+        </button> */}
       </div>
     </div>
   );
 };
+
+export default Profile;

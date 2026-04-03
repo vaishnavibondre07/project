@@ -1,8 +1,8 @@
 import { useCartState } from "../context/CartContext";
-import { CartItem } from "../components/CartItem";
+import CartItem from "../components/CartItem";
 import { useNavigate } from "react-router-dom";
 
-export const CartList = () => {
+const CartList = () => {
   const { cartItems, cartTotalPrice } = useCartState();
 
   const navigate = useNavigate();
@@ -32,12 +32,13 @@ export const CartList = () => {
       </h2>
 
       <button onClick={() => navigate('/checkout')}>
-        PLACE ORDER
+        Proceed to Checkout
       </button>
     </div>
   );
 };
 
+export default CartList;
 
 // import { useCart } from "../context/CartContext";
 // import { CartItem } from "../components/CartItem";

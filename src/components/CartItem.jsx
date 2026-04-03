@@ -1,6 +1,6 @@
 import { useCart } from "../context/CartContext";
 
-export const CartItem = ({ item }) => {
+const CartItem = ({ item }) => {
   const { increaseQty, decreaseQty, deleteFromCart } = useCart();
 
   return (
@@ -42,6 +42,8 @@ export const CartItem = ({ item }) => {
     </div>
   );
 };
+
+export default CartItem;
 
 
 // export const CartItem = ({ item, dispatch, deleteFromCart, increaseQty, decreaseQty }) => {
