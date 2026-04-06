@@ -1,4 +1,139 @@
-import { useState, useEffect, useMemo, useRef, useCallback } from "react";
+// import { useState, useEffect, useMemo, useCallback } from "react";
+// import { useSelector } from "react-redux";
+// import ProductCard from "../components/ProductCard";
+// import LoadingSkeleton from "../components/LoaderSkeleton";
+// import { useNavigate } from "react-router-dom";
+// import { useGetProductsQuery } from "../api/productApi";
+
+// const ProductListContainer = () => {
+//   const navigate = useNavigate();
+
+//   const [searchInput, setSearchInput] = useState("");
+//   const [search, setSearch] = useState("");
+//   const [category, setCategory] = useState("all");
+//   const [sortPrice, setSortPrice] = useState("none");
+
+//   const { data, error, isLoading } = useGetProductsQuery();
+
+//   // ✅ ONLY here (not in ProductCard)
+//   const cartItems = useSelector((state) => state.cart.cartItems);
+
+//   // ✅ debounce
+//   useEffect(() => {
+//     const timer = setTimeout(() => {
+//       setSearch(searchInput);
+//     }, 500);
+
+//     return () => clearTimeout(timer);
+//   }, [searchInput]);
+
+//   // ✅ products
+//   const products = useMemo(() => data?.products || [], [data]);
+
+//   // ✅ categories
+//   const categories = useMemo(() => {
+//     const unique = new Set(products.map((p) => p.category));
+//     return ["all", ...unique];
+//   }, [products]);
+
+//   // ✅ cart lookup optimized
+//   const cartIds = useMemo(() => {
+//     return new Set(cartItems.map((item) => item.id));
+//   }, [cartItems]);
+
+//   // ✅ stable navigation
+//   const handleNavigate = useCallback(
+//     (id) => {
+//       navigate(`/product/${id}`);
+//     },
+//     [navigate]
+//   );
+
+//   // ✅ filter + sort
+//   const filteredProducts = useMemo(() => {
+//     let result = products;
+
+//     if (search) {
+//       const s = search.toLowerCase();
+//       result = result.filter((p) =>
+//         p.title.toLowerCase().includes(s)
+//       );
+//     }
+
+//     if (category !== "all") {
+//       result = result.filter((p) => p.category === category);
+//     }
+
+//     if (sortPrice === "asc") {
+//       result = [...result].sort((a, b) => a.price - b.price);
+//     } else if (sortPrice === "desc") {
+//       result = [...result].sort((a, b) => b.price - a.price);
+//     }
+
+//     return result;
+//   }, [products, search, category, sortPrice]);
+
+//   if (isLoading) return <LoadingSkeleton />;
+//   if (error)
+//     return <p className="text-red-500 text-center mt-10">{error.message}</p>;
+
+//   return (
+//     <div className="p-6">
+//       {/* Filters */}
+//       <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-8">
+//         <input
+//           type="text"
+//           placeholder="Search products..."
+//           value={searchInput}
+//           onChange={(e) => setSearchInput(e.target.value)}
+//           className="border p-2 rounded-md w-full sm:w-64"
+//         />
+
+//         <select
+//           value={category}
+//           onChange={(e) => setCategory(e.target.value)}
+//           className="border p-2 rounded-md"
+//         >
+//           {categories.map((cat) => (
+//             <option key={cat} value={cat}>
+//               {cat}
+//             </option>
+//           ))}
+//         </select>
+
+//         <select
+//           value={sortPrice}
+//           onChange={(e) => setSortPrice(e.target.value)}
+//           className="border p-2 rounded-md"
+//         >
+//           <option value="none">Sort</option>
+//           <option value="asc">Low → High</option>
+//           <option value="desc">High → Low</option>
+//         </select>
+//       </div>
+
+//       {/* Products */}
+//       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+//         {filteredProducts.map((item) => (
+//           <ProductCard
+//             key={item.id}
+//             productData={item}
+//             onClick={handleNavigate} // ✅ FIXED
+//             inCart={cartIds.has(item.id)} // ✅ FIXED
+//           />
+//         ))}
+//       </ul>
+//     </div>
+//   );
+// };
+
+// export default ProductListContainer;
+
+
+
+
+import { useState, useEffect, useMemo, useCallback } from "react";
+import { useSelector } from "react-redux";
 import ProductCard from "../components/ProductCard";
 import LoadingSkeleton from "../components/LoaderSkeleton";
 import { useNavigate } from "react-router-dom";
@@ -7,42 +142,58 @@ import { useGetProductsQuery } from "../api/productApi";
 const ProductListContainer = () => {
   const navigate = useNavigate();
 
-  
-  const [searchInput, setSearchInput] = useState(""); 
-  const [search, setSearch] = useState(""); 
+  const [searchInput, setSearchInput] = useState("");
+  const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
   const [sortPrice, setSortPrice] = useState("none");
 
-  
   const { data, error, isLoading } = useGetProductsQuery();
 
+  // ✅ Get cart items ONCE here (not inside ProductCard)
+  const cartItems = useSelector((state) => state.cart.cartItems);
+
+  // ✅ Debounce search
   useEffect(() => {
     const handler = setTimeout(() => {
       setSearch(searchInput);
-    }, 500); 
+    }, 500);
 
     return () => clearTimeout(handler);
   }, [searchInput]);
 
+  // ✅ Memo products
   const products = useMemo(() => {
-    if (!data?.products) return [];
-    return data.products;
+    return data?.products || [];
   }, [data]);
 
+  // ✅ Categories
   const categories = useMemo(() => {
-    if (!products) return [];
     const uniqueCats = Array.from(new Set(products.map((p) => p.category)));
     return ["all", ...uniqueCats];
   }, [products]);
 
+  // ✅ Optimize cart lookup (VERY IMPORTANT)
+  const cartIds = useMemo(() => {
+    return new Set(cartItems.map((item) => item.id));
+  }, [cartItems]);
 
+  // ✅ Navigation (stable function)
+  const handleNavigate = useCallback(
+    (id) => {
+      navigate(`/product/${id}`);
+    },
+    [navigate]
+  );
+
+  // ✅ Filter + sort
   const filteredProducts = useMemo(() => {
-    if (!products) return [];
     let result = products;
 
     if (search) {
       const lowerSearch = search.toLowerCase();
-      result = result.filter((p) => p.title.toLowerCase().includes(lowerSearch));
+      result = result.filter((p) =>
+        p.title.toLowerCase().includes(lowerSearch)
+      );
     }
 
     if (category !== "all") {
@@ -58,13 +209,18 @@ const ProductListContainer = () => {
     return result;
   }, [products, search, category, sortPrice]);
 
-  if (isLoading) return <LoadingSkeleton/>
+  if (isLoading) return <LoadingSkeleton />;
   if (error)
-    return <p className="text-center text-red-500 mt-10">{error.message}</p>;
+    return (
+      <p className="text-center text-red-500 mt-10">
+        {error.message}
+      </p>
+    );
 
   return (
     <div className="p-6">
-    
+      
+      {/* Filters */}
       <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-8">
         <input
           type="text"
@@ -97,23 +253,141 @@ const ProductListContainer = () => {
         </select>
       </div>
 
+      {/* Products */}
       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filteredProducts.map((item) => {
-          return (
-            <ProductCard
-              key={item.id}
-              productData={item}
-              onClick={() => navigate(`/product/${item.id}`)}
-            />
-          );
-        })}
-
+        {filteredProducts.map((item) => (
+          <ProductCard
+            key={item.id}
+            productData={item}
+            onClick={() => handleNavigate(item.id)}
+            inCart={cartIds.has(item.id)} // ✅ optimized
+          />
+        ))}
       </ul>
     </div>
   );
 };
 
 export default ProductListContainer;
+
+
+
+// import { useState, useEffect, useMemo } from "react";
+// import ProductCard from "../components/ProductCard";
+// import LoadingSkeleton from "../components/LoaderSkeleton";
+// import { useNavigate } from "react-router-dom";
+// import { useGetProductsQuery } from "../api/productApi";
+
+// const ProductListContainer = () => {
+//   const navigate = useNavigate();
+
+  
+//   const [searchInput, setSearchInput] = useState(""); 
+//   const [search, setSearch] = useState(""); 
+//   const [category, setCategory] = useState("all");
+//   const [sortPrice, setSortPrice] = useState("none");
+
+  
+//   const { data, error, isLoading } = useGetProductsQuery();
+
+//   useEffect(() => {
+//     const handler = setTimeout(() => {
+//       setSearch(searchInput);
+//     }, 500); 
+
+//     return () => clearTimeout(handler);
+//   }, [searchInput]);
+
+//   const products = useMemo(() => {
+//     if (!data?.products) return [];
+//     return data.products;
+//   }, [data]);
+
+//   const categories = useMemo(() => {
+//     if (!products) return [];
+//     const uniqueCats = Array.from(new Set(products.map((p) => p.category)));
+//     return ["all", ...uniqueCats];
+//   }, [products]);
+
+
+//   const filteredProducts = useMemo(() => {
+//     if (!products) return [];
+//     let result = products;
+
+//     if (search) {
+//       const lowerSearch = search.toLowerCase();
+//       result = result.filter((p) => p.title.toLowerCase().includes(lowerSearch));
+//     }
+
+//     if (category !== "all") {
+//       result = result.filter((p) => p.category === category);
+//     }
+
+//     if (sortPrice === "asc") {
+//       result = [...result].sort((a, b) => a.price - b.price);
+//     } else if (sortPrice === "desc") {
+//       result = [...result].sort((a, b) => b.price - a.price);
+//     }
+
+//     return result;
+//   }, [products, search, category, sortPrice]);
+
+//   if (isLoading) return <LoadingSkeleton/>
+//   if (error)
+//     return <p className="text-center text-red-500 mt-10">{error.message}</p>;
+
+//   return (
+//     <div className="p-6">
+    
+//       <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-8">
+//         <input
+//           type="text"
+//           placeholder="Search products..."
+//           value={searchInput}
+//           onChange={(e) => setSearchInput(e.target.value)}
+//           className="border border-gray-300 p-2 rounded-md w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-blue-500"
+//         />
+
+//         <select
+//           value={category}
+//           onChange={(e) => setCategory(e.target.value)}
+//           className="border border-gray-300 p-2 rounded-md w-full sm:w-36 focus:outline-none focus:ring-2 focus:ring-blue-500"
+//         >
+//           {categories.map((cat) => (
+//             <option key={cat} value={cat}>
+//               {cat.charAt(0).toUpperCase() + cat.slice(1)}
+//             </option>
+//           ))}
+//         </select>
+
+//         <select
+//           value={sortPrice}
+//           onChange={(e) => setSortPrice(e.target.value)}
+//           className="border border-gray-300 p-2 rounded-md w-full sm:w-36 focus:outline-none focus:ring-2 focus:ring-blue-500"
+//         >
+//           <option value="none">Sort by Price</option>
+//           <option value="asc">Low to High</option>
+//           <option value="desc">High to Low</option>
+//         </select>
+//       </div>
+
+//       <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+//         {filteredProducts.map((item) => {
+//           return (
+//             <ProductCard
+//               key={item.id}
+//               productData={item}
+//               onClick={() => navigate(`/product/${item.id}`)}
+//             />
+//           );
+//         })}
+
+//       </ul>
+//     </div>
+//   );
+// };
+
+// export default ProductListContainer;
 
 
 
